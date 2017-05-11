@@ -2,16 +2,22 @@
 
 namespace App;
 
+use App\Notifications\AdminResetPasswordNotification;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+class Admin extends Authenticatable
 {
     use Notifiable;
 
     public function role()
     {
-        return $this->belongsToMany(role::class, 'role_users');
+        return $this->belongsToMany(role::class, 'role_admins');
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new AdminResetPasswordNotification($token));
     }
 
     protected $touches = ['role'];
